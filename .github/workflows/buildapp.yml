@@ -139,7 +139,6 @@ jobs:
           echo "==> YouTube v$youtube_version downloaded!"
           sed -i '' "17s#.*#YOUTUBE_VERSION = ${youtube_version}#g" Makefile
           echo "youtube_version=${youtube_version}" >> $GITHUB_OUTPUT
-
         env:
           THEOS: ${{ github.workspace }}/theos
           YOUTUBE_URL: ${{ env.URL_YT }}
@@ -162,6 +161,8 @@ jobs:
           make package THEOS_PACKAGE_SCHEME=rootless IPA=Payload/YouTube.app FINALPACKAGE=1 SDKVERSION=${{ inputs.sdk_version }}
           echo "package=$(ls -t packages | head -n1)" >> $GITHUB_OUTPUT
           echo -e "==> SHASUM256: $(shasum -a 256 packages/*.ipa | cut -f1 -d' ')"
+        env:
+          THEOS: ${{ github.workspace }}/theos
 
       - name: Upload Artifact
         if: ${{ inputs.upload_artifact }}
