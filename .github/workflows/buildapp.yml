@@ -155,16 +155,13 @@ jobs:
           sed -i '' "30s#.*#BUNDLE_ID = ${{ env.BUNDLE_ID }}#g" Makefile
           sed -i '' "29s#.*#DISPLAY_NAME = ${{ env.APP_NAME }}#g" Makefile
           sed -i '' "1s#.*#export TARGET = iphone:clang:${{ inputs.sdk_version }}:14.0#g" Makefile
-          export SYSROOT=$THEOS/sdks/iPhoneOS${{ inputs.sdk_version }}.sdk
-          export SDKBINPATH=$SYSROOT/usr/bin
+          echo "THEOS_SDK_NAME = $THEOS_SDK_NAME"
+          echo "SDKVERSION = $SDKVERSION"
           echo "SYSROOT = $SYSROOT"
           ls -la $SYSROOT
           make package THEOS_PACKAGE_SCHEME=rootless IPA=Payload/YouTube.app FINALPACKAGE=1 SDKVERSION=${{ inputs.sdk_version }}
-        env:
-          THEOS: ${{ github.workspace }}/theos
-          UYOU_VERSION: ${{ inputs.uyou_version }}
-          BUNDLE_ID: ${{ inputs.bundle_id }}
-          APP_NAME: ${{ inputs.app_name }}
+          echo "package=$(ls -t packages | head -n1)" >> $GITHUB_OUTPUT
+          echo -e "==> SHASUM256: $(shasum -a 256 packages/*.ipa | cut -f1 -d' ')"
 
       - name: Upload Artifact
         if: ${{ inputs.upload_artifact }}
