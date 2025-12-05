@@ -101,6 +101,13 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
+      - name: Verify SDK presence
+        run: |
+          echo "==== SDKs présents ===="
+          ls -la theos/sdks
+          echo "==== SDK 26.1 ? ===="
+          ls -la theos/sdks | grep 26 || true
+
       - name: Setup Theos Jailed
         uses: actions/checkout@v5
         with:
